@@ -1,0 +1,9 @@
+streamlit
+requests
+beautifulsoup4
+pillow
+joblib
+scikit-learn
+webdriver-manager
+selenium
+python-dotenv

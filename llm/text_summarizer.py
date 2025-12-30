@@ -1,6 +1,7 @@
 from ollama import chat
 
-def summarize_reviews(reviews, model_name="llama3"):
+def summarize_reviews(reviews, model_name="llama3.2:1b"):
+    
     """
     Takes a list of review strings, sends them to Ollama,
     and returns the summarized pros and cons.

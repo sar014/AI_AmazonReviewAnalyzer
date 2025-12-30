@@ -7,7 +7,7 @@ HEADERS = {
 }
 
 
-def get_product_reviews(search_url):
+def generate_product_url(search_url):
     page = requests.get(search_url, headers=HEADERS)
     soup = BeautifulSoup(page.content, "html.parser")
 
@@ -23,11 +23,11 @@ def get_product_reviews(search_url):
         if link and link.get("href"):
             product_url = "https://www.amazon.in" + link["href"]
             break
+    return product_url
 
+def get_product_reviews(product_url):
     if not product_url:
         raise Exception("No non-sponsored product found")
-
-    print("Product URL:", product_url)
 
     product_page = requests.get(product_url, headers=HEADERS)
     product_soup = BeautifulSoup(product_page.content, "html.parser")
@@ -39,11 +39,3 @@ def get_product_reviews(search_url):
     return [r.get_text(strip=True) for r in reviews]
 
 
-
-# search_url = "https://www.amazon.in/s?k=Samsung+Galaxy+Z+Fold7%3A+Raising+the+Bar+for+Smartphones&crid=2W8O6GD1INAA0&sprefix=sa%2Caps%2C220&ref=nb_sb_noss_2"
-# reviews = get_product_reviews(search_url)
-# print(type(reviews))
-# print(len(reviews))
-# for r in reviews:
-#     print(r)
-#     print("-" * 50)
