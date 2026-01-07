@@ -14,7 +14,7 @@ def get_image_url(image_path):
 
     with open(image_path, "rb") as img:
         response = requests.post(url, data=payload, files={"image": img})
-
+    print(response.json()["data"]["url"])
     return response.json()["data"]["url"]
 
 
@@ -23,7 +23,7 @@ def reverse_image_search(img_url):
 
     params = {
         "url": img_url,
-        "limit": "10",
+        "limit": "10", # number of search results
         "safe_search": "blur"
     }
 

@@ -10,12 +10,13 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def search_amazon(product_name):
-    options = webdriver.ChromeOptions()
-    options.add_argument("--start-maximized")
-    options.add_argument("--disable-blink-features=AutomationControlled")
+    options = webdriver.ChromeOptions() # Creates a Chrome configuration object.
+    options.add_argument("--start-maximized") # Opens Chrome in full screen
+    options.add_argument("--disable-blink-features=AutomationControlled") # Disable automation detection
 
-    options.add_argument(r"user-data-dir=C:\selenium-amazon-profile")
+    options.add_argument(r"user-data-dir=C:\selenium-amazon-profile") # Use a persistent browser profile, helps avoid Captcha
 
+    # Chrome driver setup
     driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()),
         options=options
@@ -23,15 +24,18 @@ def search_amazon(product_name):
 
     driver.get("https://www.amazon.in/")
 
-    wait = WebDriverWait(driver, 15)
+    wait = WebDriverWait(driver, 15) # Wait for 15s. Avoids crashes if page loads slowly
     
+    # Locate search bar
     search_bar = wait.until(
         EC.presence_of_element_located((By.ID, "twotabsearchtextbox"))
     )
 
+    # Enter product name and press enter
     search_bar.send_keys(product_name)
     search_bar.send_keys(Keys.ENTER)
 
+    # wait for product page to load
     time.sleep(3)
     url = driver.current_url
     driver.quit()

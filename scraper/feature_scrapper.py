@@ -15,7 +15,7 @@ def get_product_features(product_url):
 
     features = []
 
-    # ✅ About this item (Feature bullets)
+    #  About this item (Feature bullets)
     feature_section = soup.find("div", id="feature-bullets")
 
     if feature_section:
@@ -27,9 +27,3 @@ def get_product_features(product_url):
 
     return features
 
-# product_url = "https://www.amazon.in/Sony-PlayStation%C2%AE5-Digital-Edition-slim/dp/B0CY5QW186/ref=sr_1_1?dib=eyJ2IjoiMSJ9.W_aORAobBCT42F1MQVtl9n-7-_gBvYVRskt9hxGq29-8xXOwpYGNXWNzvw8fPwBlY6PGDPCdP_ggP9K5Bv-G_8d2LJH5n-_yfhsmXsjB7PlK1Hgt9sy58NoOpPiJGkKxnK4aOFF-KoaEc_Ag2fmgRh-nXCSZ378xpUp_KzaJ7EllRBqwjXAw-DhPqaZ_k64PzfEGiJ7U9PsMKWtXWt2RK4eDkC0ZpCH8_BEUS6oqTvE.SkJcGdMLgecZTmJTNB4BJO4mPX5_l4WUfPdIugXgVkk&dib_tag=se&keywords=Sony+PlayStation%C2%AE5+Digital+Edition+%28slim%29+-+eBay&qid=1766254226&sr=8-1"
-# feature_summary = get_product_features(product_url)
-
-# for f in feature_summary:
-#     print("="*50)
-#     print(f)

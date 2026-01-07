@@ -5,11 +5,9 @@ import tempfile
 import os
 
 from image_search.reverse_image import get_image_url, reverse_image_search
-from scraper.amazon_scraper import search_amazon
-from scraper.review_scraper import get_product_reviews,generate_product_url
-from scraper.feature_scrapper import get_product_features
 from llm.text_summarizer import summarize_reviews
-from llm.feature_summarizer import summarize_features
+from product_url_extract import get_product_url
+from feature_extracter import get_review_comments
 
 st.set_page_config(
     page_title="Image-Based Product Review Analyzer",
@@ -53,16 +51,11 @@ if uploaded_image:
         st.success(f"Detected product: **{product_name}**")
 
         with st.spinner("Searching Amazon..."):
-            search_url = search_amazon(product_name)
-            product_url = generate_product_url(search_url)
-            print(product_url)
-
-        with st.spinner("Extracting features..."):
-            features = get_product_features(product_url)
-            feature_summary = summarize_features(features)
+            product_url = get_product_url(product_name)
+            print("\nProduct URL:", product_url)
 
         with st.spinner("Extracting reviews..."):
-            reviews = get_product_reviews(product_url)
+            reviews = get_review_comments(product_url)
 
         if not reviews:
             st.error("No reviews found.")
@@ -73,28 +66,33 @@ if uploaded_image:
 
         st.subheader("📝 Reviews & Sentiment")
 
+       
         review_data = []
 
         for r in reviews[:5]:
-            review_vector = vectorizer.transform([r])
+            review_vector = vectorizer.transform([r["text"]])
             sentiment = model.predict(review_vector)[0]
-            review_data.append({"text": r, "sentiment": sentiment})
+
+            review_data.append({
+                "text": r["text"],
+                "sentiment": sentiment
+            })
 
             emoji = "😊" if sentiment == "positive" else "😡" if sentiment == "negative" else "😐"
 
             st.markdown(f"""
-            **{emoji} {sentiment.capitalize()} Review**
-            > {r}
+            **{emoji} {sentiment.capitalize()} Review**  
+            **🆔 Review ID:** `{r["id"]}`  
+            **📝 Title:** *{r["title"]}*  
+
+            > {r["text"]}
             """)
 
         with st.spinner("Generating pros & cons..."):
-            review_texts = [rd["text"] for rd in review_data]
+            review_texts = [r["text"] for r in reviews]
             summary = summarize_reviews(review_texts)
 
         st.subheader("📌 Pros & Cons (LLM Generated)")
         st.markdown(summary)
-
-        st.subheader("✨ Product Features")
-        st.markdown(feature_summary)
 
         os.remove(image_path)
